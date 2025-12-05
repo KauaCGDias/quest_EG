@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Quiz – Ciclo de Vida do Software</title>
+
+  <style>
+    body{
+      background:#0f1724;
+      color:white;
+      font-family:Arial, Helvetica, sans-serif;
+      padding:20px;
+    }
+
+    h1{ text-align:center; }
+
+    .question{
+      background:#111a2b;
+      padding:15px;
+      margin-bottom:15px;
+      border-radius:10px;
+      border:1px solid #1a2436;
+    }
+
+    .options label{
+      display:block;
+      padding:10px;
+      border:1px solid #334;
+      border-radius:8px;
+      cursor:pointer;
+      margin-top:8px;
+      transition:0.2s;
+    }
+
+    .options label:hover{
+      background:#1b2639;
+    }
+
+    /* cores de certo e errado */
+    .correct-answer{
+      background:rgba(22,163,74,0.25) !important;
+      border-color:#16a34a !important;
+      color:#c2ffd2;
+    }
+
+    .wrong-answer{
+      background:rgba(239,68,68,0.25) !important;
+      border-color:#ef4444 !important;
+      color:#ffd2d2;
+    }
+
+    button{
+      padding:10px 15px;
+      margin-top:15px;
+      border-radius:8px;
+      font-weight:bold;
+      cursor:pointer;
+      border:none;
+    }
+
+    #submitBtn{
+      background:#38bdf8;
+      color:#00131a;
+    }
+
+    #retryBtn{
+      background:transparent;
+      border:2px solid #38bdf8;
+      color:#38bdf8;
+      margin-left:10px;
+    }
+
+    #resultBox{
+      margin-top:20px;
+      font-size:18px;
+      font-weight:bold;
+      text-align:center;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Quiz – Fases do Ciclo de Vida do Software</h1>
+
+<form id="quizForm">
+  <div id="questionsContainer"></div>
+
+  <button type="button" id="submitBtn">Finalizar</button>
+  <button type="button" id="retryBtn">Refazer</button>
+
+  <div id="resultBox"></div>
+</form>
+
+
+<script>
+/* -----------------------------
+   TODAS AS 15 QUESTÕES COMPLETAS
+   ----------------------------- */
+const quiz = [
+  {
+    q:"Durante o desenvolvimento de um sistema para gestão hospitalar, percebe-se que o software passa por diversas etapas até ser disponibilizado e, posteriormente, até o fim da sua utilização. Segundo o conceito apresentado no texto, o ciclo de vida de um software inclui:",
+    opts:[
+      "Apenas codificação e entrega.",
+      "Todo o período desde a definição inicial até o momento em que deixa de ser utilizado.",
+      "Somente mudanças solicitadas pelo cliente.",
+      "Apenas manutenção após a produção."
+    ],
+    a:1
+  },
+  {
+    q:"Com o avanço de novas tecnologias, muitas empresas passaram a adotar metodologias diferentes. Segundo o texto, esse avanço impacta o ciclo de vida de software porque:",
+    opts:[
+      "Obriga empresas a abandonar processos antigos.",
+      "Substitui desenvolvedores por automação.",
+      "Evolui constantemente os modelos de processo utilizados.",
+      "Elimina o planejamento do desenvolvimento."
+    ],
+    a:2
+  },
+  {
+    q:"Pressman e Maxim destacam desafios históricos no desenvolvimento. Em um sistema bancário atrasado, qual pergunta citada no texto poderia ser feita?",
+    opts:[
+      "Por que o software nunca precisa de atualização?",
+      "Por que a conclusão do software leva tanto tempo?",
+      "Por que clientes exigem tantas funcionalidades?",
+      "Por que não reutilizamos código antigo?"
+    ],
+    a:1
+  },
+  {
+    q:"Em um software educacional, segundo o texto, o cliente exerce papel fundamental porque:",
+    opts:[
+      "Define suas necessidades influenciando o que será criado.",
+      "Atua como programador auxiliar.",
+      "Cria o plano de testes.",
+      "Substitui o analista de requisitos."
+    ],
+    a:0
+  },
+  {
+    q:"Aplicar modelos de ciclo de vida é importante porque:",
+    opts:[
+      "Garante entrega antecipada.",
+      "Melhora organização, qualidade e previsibilidade.",
+      "Dispensa validação com o cliente.",
+      "Permite que só uma pessoa desenvolva o sistema."
+    ],
+    a:1
+  },
+  {
+    q:"Durante o desenvolvimento de um app de delivery, o cliente muda requisitos. Isso mostra que:",
+    opts:[
+      "O software deve ser refeito do zero.",
+      "Mudanças são raras e devem ser evitadas.",
+      "Software nunca está finalizado e pode ser modificado.",
+      "A documentação deve ser ignorada."
+    ],
+    a:2
+  },
+  {
+    q:"O texto afirma que software é um produto intangível. Isso significa que:",
+    opts:[
+      "É igual a fabricar peças físicas.",
+      "Depende exclusivamente do hardware.",
+      "Não pode ser avaliado em qualidade.",
+      "Envolve elementos abstratos e complexos."
+    ],
+    a:3
+  },
+  {
+    q:"Ao iniciar um sistema de e-commerce, a equipe levanta necessidades dos usuários. Isso corresponde a:",
+    opts:[
+      "Validação.",
+      "Especificação.",
+      "Evolução.",
+      "Implementação."
+    ],
+    a:1
+  },
+  {
+    q:"Transformar especificações em um programa executável corresponde à fase de:",
+    opts:[
+      "Implementação e projeto.",
+      "Evolução.",
+      "Revisão de arquitetura.",
+      "Planejamento."
+    ],
+    a:0
+  },
+  {
+    q:"Após entregar a primeira versão do sistema, a equipe corrige erros e adiciona módulos. Isso é:",
+    opts:[
+      "Especificação.",
+      "Evolução do software.",
+      "Projeto estrutural.",
+      "Validação final."
+    ],
+    a:1
+  },
+  {
+    q:"A etapa em que o cliente verifica se o software atende aos requisitos é chamada de:",
+    opts:[
+      "Implementação.",
+      "Evolução.",
+      "Validação.",
+      "Organização estrutural."
+    ],
+    a:2
+  },
+  {
+    q:"Documentar arquitetura, testes e responsabilidades é considerado pelo texto como:",
+    opts:[
+      "Produtos do processo.",
+      "Pré-condições do próximo ciclo.",
+      "Papéis atribuídos aos desenvolvedores.",
+      "Material opcional sem impacto."
+    ],
+    a:2
+  },
+  {
+    q:"Medir o progresso do desenvolvimento é um desafio. O texto questiona:",
+    opts:[
+      "Por que temos dificuldades de medir o desenvolvimento?",
+      "Por que clientes não definem perfeitamente requisitos?",
+      "Por que todo software tem erros?",
+      "Por que modelos modernos são infalíveis?"
+    ],
+    a:0
+  },
+  {
+    q:"Se uma equipe não identifica erros antes da entrega, isso reflete:",
+    opts:[
+      "Dificuldade em treinar iniciantes.",
+      "Falta de metodologias que detectem erros antecipadamente.",
+      "Excesso de recursos computacionais.",
+      "Redução da necessidade de manutenção."
+    ],
+    a:1
+  },
+  {
+    q:"Processos de software organizam atividades para garantir qualidade e maturidade. Isso significa que:",
+    opts:[
+      "Software só termina quando não há erros.",
+      "Processos estruturam qualidade e repetibilidade.",
+      "Todo projeto deve seguir o mesmo modelo.",
+      "A produção depende apenas da codificação."
+    ],
+    a:1
+  }
+];
+
+/* -----------------------------
+   RENDERIZAR QUESTÕES
+   ----------------------------- */
+const container = document.getElementById('questionsContainer');
+
+quiz.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className = 'question';
+  div.id = 'q'+idx;
+
+  div.innerHTML = `
+    <p><strong>${idx+1}.</strong> ${item.q}</p>
+    <div class="options">
+      ${item.opts.map((opt,i)=>`
+        <label><input type="radio" name="q${idx}" value="${i}"> ${opt}</label>
+      `).join('')}
+    </div>
+  `;
+  container.appendChild(div);
+});
+
+
+/* -----------------------------
+   AVALIAÇÃO COM CORES
+   ----------------------------- */
+document.getElementById("submitBtn").onclick = function () {
+  let score = 0;
+
+  quiz.forEach((item, idx)=>{
+    let selected = document.querySelector(`input[name="q${idx}"]:checked`);
+    let labels = document.querySelectorAll(`#q${idx} .options label`);
+
+    // Impedir finalizar sem responder tudo
+    if(!selected){
+      alert("Você deixou questões sem responder!");
+      throw "Not answered";
+    }
+
+    // limpar estilos
+    labels.forEach(l => l.classList.remove("correct-answer","wrong-answer"));
+
+    let chosenValue = parseInt(selected.value);
+
+    if(chosenValue === item.a){
+      score++;
+      selected.parentElement.classList.add("correct-answer");
+    } else {
+      selected.parentElement.classList.add("wrong-answer");
+      labels[item.a].classList.add("correct-answer");
+    }
+  });
+
+  document.getElementById("resultBox").innerText =
+    `Você acertou ${score} de ${quiz.length} questões.`;
+};
+
+
+/* -----------------------------
+   BOTÃO REFAZER
+   ----------------------------- */
+document.getElementById("retryBtn").onclick = function(){
+  document.querySelectorAll("input[type=radio]").forEach(r=>{ r.checked = false; });
+  document.querySelectorAll(".correct-answer,.wrong-answer")
+      .forEach(el=>el.classList.remove("correct-answer","wrong-answer"));
+  document.getElementById("resultBox").innerText = "";
+  window.scrollTo(0,0);
+};
+</script>
+
+</body>
+</html>
